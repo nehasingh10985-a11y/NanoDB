@@ -104,3 +104,20 @@ Includes 28+ tests covering storage, WAL replay, B+Tree correctness under stress
 ## Tech stack
 
 Node.js, `fs` (raw file I/O), Jest (testing)
+
+## CLI Usage
+
+```bash
+node cli.js put <key> <value>
+node cli.js get <key>
+node cli.js delete <key>
+node cli.js range <startKey> <endKey>
+```
+
+Example:
+
+```bash
+node cli.js put name "NanoDB"
+node cli.js get name
+# => "NanoDB"
+```
