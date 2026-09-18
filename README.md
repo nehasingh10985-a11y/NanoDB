@@ -18,13 +18,13 @@ Built as a learning project to understand what actually happens inside a databas
 
 
 graph TD
-    classDef main fill:#1f2937,stroke:#3b82f6,stroke-width:2px,color:#fff;
-    classDef component fill:#111827,stroke:#4b5563,stroke-width:1px,color:#e5e7eb;
+    classDef main fill:#1f2937,stroke:#3b82f6,stroke-width:2px,color:#fff
+    classDef component fill:#111827,stroke:#4b5563,stroke-width:1px,color:#e5e7eb
 
-    API["<b>NanoDB Engine</b><br/><code>engine/db.js</code><br/><i>put | get | delete | range</i>"]:::main
-    WAL["<b>WAL System</b><br/><code>WalWriter</code> & <code>WalReplay</code><br/><i>Append-only crash recovery log</i>"]:::component
-    INDEX["<b>B+Tree Index</b><br/>In-Memory Index & Page Cache"]:::component
-    DISK["<b>Disk Manager</b><br/>Raw Fixed-Size Page I/O (4KB)"]:::component
+    API["NanoDB Engine<br/>engine/db.js<br/>put | get | delete | range"]:::main
+    WAL["WAL System<br/>WalWriter & WalReplay<br/>Append-only crash recovery log"]:::component
+    INDEX["B+Tree Index<br/>In-Memory Index & Page Cache"]:::component
+    DISK["Disk Manager<br/>Raw Fixed-Size Page I/O (4KB)"]:::component
 
     API -->|1. Write Operation| WAL
     WAL -->|2. Apply to Index| INDEX
