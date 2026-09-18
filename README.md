@@ -16,21 +16,32 @@ Built as a learning project to understand what actually happens inside a databas
 
 ## Architecture
 
-
-graph TD
-    classDef main fill:#1f2937,stroke:#3b82f6,stroke-width:2px,color:#fff
-    classDef component fill:#111827,stroke:#4b5563,stroke-width:1px,color:#e5e7eb
-
-    API["NanoDB Engine<br/>engine/db.js<br/>put | get | delete | range"]:::main
-    WAL["WAL System<br/>WalWriter & WalReplay<br/>Append-only crash recovery log"]:::component
-    INDEX["B+Tree Index<br/>In-Memory Index & Page Cache"]:::component
-    DISK["Disk Manager<br/>Raw Fixed-Size Page I/O (4KB)"]:::component
-
-    API -->|1. Write Operation| WAL
-    WAL -->|2. Apply to Index| INDEX
-    INDEX -->|3. Persist Page| DISK
-    WAL -.->|On Crash Recovery| INDEX
-
+┌─────────────────────────────────────────────────────────┐
+│                      NanoDB Engine                      │
+│                    (engine/db.js)                       │
+│             put  │  get  │  delete  │  range            │
+└───────────────────────────┬─────────────────────────────┘
+                            │
+                            │ 1. Write Operation
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│                       WAL System                        │
+│            WalWriter  │  WalReplay (Recovery)           │
+└───────────────────────────┬─────────────────────────────┘
+                            │
+                            │ 2. Apply to Index
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│                      B+Tree Index                       │
+│            (In-Memory Index & Page Cache)               │
+└───────────────────────────┬─────────────────────────────┘
+                            │
+                            │ 3. Persist Page
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│                      Disk Manager                       │
+│             (Raw Fixed-Size Page I/O - 4KB)             │
+└─────────────────────────────────────────────────────────┘
 
 ## How it works
 
