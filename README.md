@@ -16,9 +16,8 @@ Built as a learning project to understand what actually happens inside a databas
 
 ## Architecture
 
-```mermaid
-flowgraph TD
-    %% Styling
+
+graph TD
     classDef main fill:#1f2937,stroke:#3b82f6,stroke-width:2px,color:#fff;
     classDef component fill:#111827,stroke:#4b5563,stroke-width:1px,color:#e5e7eb;
 
@@ -31,7 +30,7 @@ flowgraph TD
     WAL -->|2. Apply to Index| INDEX
     INDEX -->|3. Persist Page| DISK
     WAL -.->|On Crash Recovery| INDEX
-```
+
 
 ## How it works
 
