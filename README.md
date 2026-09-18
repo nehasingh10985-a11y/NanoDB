@@ -31,10 +31,6 @@ Client Request -> WAL (Write-Ahead Log) -> B+Tree Index -> Disk Manager
 4. **Disk Manager**
    * Manages low-level I/O operations on fixed 4KB disk pages.## 🏗️ Architecture
 
-```
-Client Request -> WAL (Write-Ahead Log) -> B+Tree Index -> Disk Manager
-```
-
 ## How it works
 
 **Write path (`put`)**
