@@ -35,18 +35,6 @@ Client Request -> WAL (Write-Ahead Log) -> B+Tree Index -> Disk Manager
 Client Request -> WAL (Write-Ahead Log) -> B+Tree Index -> Disk Manager
 ```
 
-### ⚙️ Storage Engine Flow
-
-1. **NanoDB Engine** (`engine/db.js`)
-   * Public API layer exposing `put`, `get`, `delete`, and `range` methods.
-2. **WAL System** (`WalWriter` / `WalReplay`)
-   * Appends every write operation to the log before modifying memory for crash recovery and durability.
-3. **B+Tree Index**
-   * Handles in-memory indexing, node splitting, and page cache lookups.
-4. **Disk Manager**
-   * Manages low-level I/O operations on fixed 4KB disk pages.
-
-
 ## How it works
 
 **Write path (`put`)**
