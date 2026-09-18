@@ -16,37 +16,22 @@ Built as a learning project to understand what actually happens inside a databas
 
 ## Architecture
 
-┌────────────────────────┐
-│ NanoDB Client │
-│ (engine/db.js) │
-│ │
-│ put / get / delete │
-│ range │
-└───────────┬────────────┘
-│
-▼
-┌────────────────────────┐
-│ WalWriter │
-│ │
-│ Appends operations to │
-│ write-ahead log first │
-└───────────┬────────────┘
-│
-▼
-┌────────────────────────┐
-│ B+Tree Index │
-│ │
-│ In-memory index & │
-│ page cache operations │
-└───────────┬────────────┘
-│
-▼
-┌────────────────────────┐
-│ DiskManager │
-│ │
-│ Handles raw, fixed- │
-│ size 4KB page I/O │
-└────────────────────────┘
+```mermaid
+flowgraph TD
+    %% Styling
+    classDef main fill:#1f2937,stroke:#3b82f6,stroke-width:2px,color:#fff;
+    classDef component fill:#111827,stroke:#4b5563,stroke-width:1px,color:#e5e7eb;
+
+    API["<b>NanoDB Engine</b><br/><code>engine/db.js</code><br/><i>put | get | delete | range</i>"]:::main
+    WAL["<b>WAL System</b><br/><code>WalWriter</code> & <code>WalReplay</code><br/><i>Append-only crash recovery log</i>"]:::component
+    INDEX["<b>B+Tree Index</b><br/>In-Memory Index & Page Cache"]:::component
+    DISK["<b>Disk Manager</b><br/>Raw Fixed-Size Page I/O (4KB)"]:::component
+
+    API -->|1. Write Operation| WAL
+    WAL -->|2. Apply to Index| INDEX
+    INDEX -->|3. Persist Page| DISK
+    WAL -.->|On Crash Recovery| INDEX
+```
 
 ## How it works
 
