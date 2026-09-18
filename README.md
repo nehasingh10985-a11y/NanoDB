@@ -14,34 +14,38 @@ Built as a learning project to understand what actually happens inside a databas
 - **Range queries** — efficient key-range scans using a linked leaf-node structure
 - **Full persistence** — all data and structure survive process restarts
 
-## Architecture
+## 🏗️ Architecture
 
-┌─────────────────────────────────────────────────────────┐
-│                      NanoDB Engine                      │
-│                    (engine/db.js)                       │
-│             put  │  get  │  delete  │  range            │
-└───────────────────────────┬─────────────────────────────┘
-                            │
-                            │ 1. Write Operation
-                            ▼
-┌─────────────────────────────────────────────────────────┐
-│                       WAL System                        │
-│            WalWriter  │  WalReplay (Recovery)           │
-└───────────────────────────┬─────────────────────────────┘
-                            │
-                            │ 2. Apply to Index
-                            ▼
-┌─────────────────────────────────────────────────────────┐
-│                      B+Tree Index                       │
-│            (In-Memory Index & Page Cache)               │
-└───────────────────────────┬─────────────────────────────┘
-                            │
-                            │ 3. Persist Page
-                            ▼
-┌─────────────────────────────────────────────────────────┐
-│                      Disk Manager                       │
-│             (Raw Fixed-Size Page I/O - 4KB)             │
-└─────────────────────────────────────────────────────────┘
+```
+Client Request -> WAL (Write-Ahead Log) -> B+Tree Index -> Disk Manager
+```
+
+### ⚙️ Storage Engine Flow
+
+1. **NanoDB Engine** (`engine/db.js`)
+   * Public API layer exposing `put`, `get`, `delete`, and `range` methods.
+2. **WAL System** (`WalWriter` / `WalReplay`)
+   * Appends every write operation to the log before modifying memory for crash recovery and durability.
+3. **B+Tree Index**
+   * Handles in-memory indexing, node splitting, and page cache lookups.
+4. **Disk Manager**
+   * Manages low-level I/O operations on fixed 4KB disk pages.## 🏗️ Architecture
+
+```
+Client Request -> WAL (Write-Ahead Log) -> B+Tree Index -> Disk Manager
+```
+
+### ⚙️ Storage Engine Flow
+
+1. **NanoDB Engine** (`engine/db.js`)
+   * Public API layer exposing `put`, `get`, `delete`, and `range` methods.
+2. **WAL System** (`WalWriter` / `WalReplay`)
+   * Appends every write operation to the log before modifying memory for crash recovery and durability.
+3. **B+Tree Index**
+   * Handles in-memory indexing, node splitting, and page cache lookups.
+4. **Disk Manager**
+   * Manages low-level I/O operations on fixed 4KB disk pages.
+
 
 ## How it works
 
