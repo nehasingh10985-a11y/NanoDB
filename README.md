@@ -16,21 +16,37 @@ Built as a learning project to understand what actually happens inside a databas
 
 ## Architecture
 
-┌─────────────────────────┐
-│ NanoDB │ <- public API: put / get / delete / range
+┌────────────────────────┐
+│ NanoDB Client │
 │ (engine/db.js) │
-└───────────┬───────────────┘
-│
-┌────────┴─────────┐
 │ │
-┌──▼──────┐ ┌──────▼──────┐
-│ B+Tree │ │ WalWriter │ <- logs every write before it's applied
-│ (index) │ │ WalReplay │ <- replays uncommitted writes on restart
-└─────────┘ └──────┬──────┘
+│ put / get / delete │
+│ range │
+└───────────┬────────────┘
 │
-┌───────▼────────┐
-│ DiskManager │ <- raw fixed-size page I/O
-└─────────────────┘
+▼
+┌────────────────────────┐
+│ WalWriter │
+│ │
+│ Appends operations to │
+│ write-ahead log first │
+└───────────┬────────────┘
+│
+▼
+┌────────────────────────┐
+│ B+Tree Index │
+│ │
+│ In-memory index & │
+│ page cache operations │
+└───────────┬────────────┘
+│
+▼
+┌────────────────────────┐
+│ DiskManager │
+│ │
+│ Handles raw, fixed- │
+│ size 4KB page I/O │
+└────────────────────────┘
 
 ## How it works
 
